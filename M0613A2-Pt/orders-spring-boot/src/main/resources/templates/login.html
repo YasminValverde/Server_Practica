@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="https://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<head th:replace="~{fragments/template :: head}"></head>
+
+<body class="m-4">
+	<div class="container">
+		<header th:replace="~{fragments/template :: header}"></header>
+
+		<nav th:replace="~{fragments/template :: navbar(login)}"></nav>
+
+		<!-- REVIEW Login form here -->
+		<form th:action="@{/login}" method="post">
+			<div class="container g-2 mb-4">
+				<div class="row justify-content-center overflow-hidden">
+					<div class="col-sm-9 col-md-7 col-lg-5 col-xl-4">
+
+						<div class="card">
+							<div class="card-header bg-secondary-subtle">
+								<h5 class="card-title mb-0" th:text="#{login.give.credentials}">Please, enter your credentials</h5>
+							</div>
+
+							<div class="card-body">
+								<div class="input-group py-1">
+									<span class="input-group-text"> <i class="bi bi-person-fill"></i>
+									</span> <input class="form-control" th:placeholder="#{login.username}" placeholder="Username" name="username" type="text">
+								</div>
+
+								<div class="input-group py-1">
+									<span class="input-group-text"> <i class="bi bi-key-fill"></i>
+									</span> <input class="form-control" th:placeholder="#{login.password}" placeholder="Password" name="password" type="password">
+								</div>
+								
+								<div class="bg-danger-subtle border border-danger rounded py-2 ps-2 mt-2" th:if="${error}">
+									<span class="text-danger" th:text="#{login.credentials.failure}">The given credentials are wrong</span>
+								</div>
+							</div>
+
+							<div class="card-footer bg-secondary-subtle">
+								<input class="btn btn-light btn-outline-secondary col-12" type="submit" th:value="#{login.login}" value="Login">
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</form>
+	</div>
+</body>
+</html>
