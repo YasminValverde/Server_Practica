@@ -19,8 +19,8 @@ import org.springframework.web.servlet.ModelAndView;
 import cat.institutmarianao.orders.model.Item;
 import cat.institutmarianao.orders.model.Order;
 import cat.institutmarianao.orders.model.User;
-import cat.institutmarianao.orders.repository.ItemRepository;
-import cat.institutmarianao.orders.repository.OrderRepository;
+import cat.institutmarianao.orders.service.impl.ItemService;
+import cat.institutmarianao.orders.service.impl.OrderService;
 import jakarta.validation.Valid;
 
 //REVIEW - Add necessary annotations to declare a Controller with corresponding base path
@@ -32,10 +32,10 @@ public class UsersController {
 
 	// REVIEW - Inject services
 	@Autowired
-	private OrderRepository orderRepository;
+	private OrderService orderService;
 
 	@Autowired
-	private ItemService ItemService;
+	private ItemService itemService;
 	
 	/*
 	 * This annotated method will be called by Spring MVC to prepare the Order
@@ -63,7 +63,7 @@ public class UsersController {
 		// · "orders" with the list of all the orders of the logged user obtained from the service layer
 		ModelAndView modelView = new ModelAndView("orders");
 		
-		modelView.addObject("orders", orderRepository.findByUser(loggedUser));
+		modelView.addObject("orders", orderService.findByUser(loggedUser));
 
 		// REVIEW - return the ModelAndView object
 		return modelView;
@@ -75,7 +75,7 @@ public class UsersController {
 		// REVIEW - Create and return a ModelAndView object to send to the view named "newOrder" with the following parameter:
 		ModelAndView modelView = new ModelAndView("newOrder");
 		// · "items" with the list of all the items obtained from the service layer
-		modelView.addObject("items", itemRepository.getAll());
+		modelView.addObject("items", itemService.getAll());
 		
 		// REVIEW - return the ModelAndView object
 		return modelView;
@@ -96,11 +96,11 @@ public class UsersController {
 	@GetMapping("/newOrder/increaseItem")
 	public String newOrderIncreaseItem(@SessionAttribute("order") Order order
 	/* REVIEW - Get the "reference" parameter */,@RequestParam("reference") Long reference) {
-		
+			
 
-		// TODO - Get the item related to the reference passed as parameter from the service layer
-		  Item item = itemRepository.get(reference);
-		// TODO - Increase item quantity
+		// REVIEW - Get the item related to the reference passed as parameter from the service layer
+		  Item item = itemService.get(reference);
+		// REVIEW - Increase item quantity
 		  Integer quantity = order.getItems().get(item);
 		  if (quantity != null) {
 			    order.getItems().put(item, quantity + 1);
@@ -118,8 +118,8 @@ public class UsersController {
 	/* REVIEW - Get the "reference" parameter */,@RequestParam("reference") Long reference) {
 
 		// REVIEW - Get the item related to the reference passed as parameter from the service layer
-		Item item = itemRepository.get(reference);
-		// TODO - Decrease item quantity
+		Item item = itemService.get(reference);
+		// REVIEW - Decrease item quantity
 		  if (item != null) {
 		        Integer quantity = order.getItems().get(item);
 		        if (quantity != null) {
@@ -142,8 +142,8 @@ public class UsersController {
 		// Nothing to do here, just show the finishOrder view.
 		// The order is yet ready in session, so the view can take it from the session and show it
 
-		// TODO - Return the finishOrder view name
-		return null;
+		// REVIEW - Return the finishOrder view name
+		return "finishOrder";
 	}
 
 	// REVIEW - Add necessary annotation to handle corresponding POST request
@@ -152,9 +152,14 @@ public class UsersController {
 	public String finishOrder(@Valid @ModelAttribute("order") Order order, BindingResult bindingResult,
 			SessionStatus sessionStatus) {
 
-		// TODO - If there are validation errors, return to finishOrder view
-		// TODO - Set the order start date to current date
-		// TODO - Save the order using the service layer
+		// REVIEW - If there are validation errors, return to finishOrder view
+		if (bindingResult.hasErrors()) {
+			return "finishOrder";
+		}
+		// REVIEW - Set the order start date to current date
+		order.setStartDate(new java.util.Date());
+		// REVIEW - Save the order using the service layer
+		orderService.save(order);
 
 		// Mark session complete to clear the order object from session
 		sessionStatus.setComplete();
@@ -163,31 +168,6 @@ public class UsersController {
 		return "redirect:/users/orders";
 	}
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
