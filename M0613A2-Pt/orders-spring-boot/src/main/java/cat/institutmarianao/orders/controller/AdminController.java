@@ -1,5 +1,8 @@
 package cat.institutmarianao.orders.controller;
 
+import java.time.LocalDate;
+import java.util.Date;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
@@ -44,12 +47,17 @@ public class AdminController {
 	// REVIEW - Add necessary annotation to handle corresponding POST request
 	@PostMapping("/setDelivery")
 	// TODO - Add necessary annotation to validate "reference" and "deliveryDate" request parameters
-	public String setDeliveryDate(@SessionAttribute("order") Order order,@RequestParam("reference") Long reference)/* TODO - Get "reference" and "deliveryDate" request parameters */ {
-		// TODO - Get the order related to the reference passed as parameter from the service layer
+	public String setDeliveryDate(
+			@SessionAttribute("order") Order order, 
+		/* REVIEW - Get "reference" and "deliveryDate" request parameters */ 
+			@RequestParam("reference")Long reference,
+	        @RequestParam("deliveryDate") Date deliveryDate) 
+	{
+		// REVIEW - Get the order related to the reference passed as parameter from the service layer
 		
 		 order = orderService.get(reference);
 		// REVIEW - Set the order delivery date with the deliveryDate value
-		 order.setDeliveryDate(order.getDeliveryDate());
+		 order.setDeliveryDate(deliveryDate);
 		// REVIEW - Update the order
 		orderService.update(order) ;
 
@@ -60,7 +68,10 @@ public class AdminController {
 	// REVIEW - Add necessary annotation to handle corresponding POST request
 	@PostMapping("/setStatus")
 	// TODO - Add necessary annotation to validate "reference" and "status" request parameters
-	public String setStatus(/* TODO - Get "reference" and "status" request parameters */) {
+	public String setStatus(
+		/* TODO - Get "reference" and "status" request parameters */
+			@RequestParam("reference")Long reference,
+			@RequestParam("status") Order.Status status) {
 		// TODO - Get the order related to the reference passed as parameter from the service layer
 		// TODO - Set the order state with the status value
 		// TODO - Update the order

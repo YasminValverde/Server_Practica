@@ -1,6 +1,7 @@
 package cat.institutmarianao.orders.model;
 
 import java.io.Serializable;
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
