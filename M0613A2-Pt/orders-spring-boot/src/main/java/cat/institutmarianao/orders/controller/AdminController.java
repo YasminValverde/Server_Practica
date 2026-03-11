@@ -17,6 +17,8 @@ import cat.institutmarianao.orders.model.Order;
 import cat.institutmarianao.orders.model.User;
 import cat.institutmarianao.orders.repository.OrderRepository;
 import cat.institutmarianao.orders.service.impl.OrderService;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Positive;
 
 // REVIEW - Add necessary annotations to declare a Controller with corresponding base path
 @Controller
@@ -31,12 +33,13 @@ public class AdminController {
 	@GetMapping()
 	public ModelAndView orders(Authentication authentication) {
 		// REVIEW - Get all orders from the service layer
+		orderService.getAll();
 		User loggedUser = (User) authentication.getPrincipal();
 
 		// REVIEW - Create and return a ModelAndView object to send to the view named "orders" with the following parameters:
 		ModelAndView modelView = new ModelAndView("orders");
 		// · "orders" with the list of all the orders of all users obtained from the service layer
-		modelView.addObject("orders", orderService.findByUser(loggedUser));
+		modelView.addObject("orders", orderService.getAll());
 		// · "orderStatus" with the Order.Status values
 		modelView.addObject("orderStatus", Order.Status.values());
 		
@@ -46,12 +49,13 @@ public class AdminController {
 
 	// REVIEW - Add necessary annotation to handle corresponding POST request
 	@PostMapping("/setDelivery")
-	// TODO - Add necessary annotation to validate "reference" and "deliveryDate" request parameters
+	// REVIEW - Add necessary annotation to validate "reference" and "deliveryDate" request parameters
+	
 	public String setDeliveryDate(
 			@SessionAttribute("order") Order order, 
 		/* REVIEW - Get "reference" and "deliveryDate" request parameters */ 
-			@RequestParam("reference")Long reference,
-	        @RequestParam("deliveryDate") Date deliveryDate) 
+			@RequestParam("reference") @NotNull @Positive Long reference,
+	        @RequestParam("deliveryDate") @NotNull Date deliveryDate) 
 	{
 		// REVIEW - Get the order related to the reference passed as parameter from the service layer
 		
@@ -67,14 +71,18 @@ public class AdminController {
 
 	// REVIEW - Add necessary annotation to handle corresponding POST request
 	@PostMapping("/setStatus")
-	// TODO - Add necessary annotation to validate "reference" and "status" request parameters
+	// REVIEW - Add necessary annotation to validate "reference" and "status" request parameters
+	
 	public String setStatus(
-		/* TODO - Get "reference" and "status" request parameters */
-			@RequestParam("reference")Long reference,
-			@RequestParam("status") Order.Status status) {
-		// TODO - Get the order related to the reference passed as parameter from the service layer
-		// TODO - Set the order state with the status value
-		// TODO - Update the order
+		/* REVIEW - Get "reference" and "status" request parameters */
+			@RequestParam("reference") @NotNull @Positive Long reference,
+			@RequestParam("status") @NotNull Order.Status status) {
+		// REVIEW - Get the order related to the reference passed as parameter from the service layer
+		Order order = orderService.get(reference);
+		// REVIEW - Set the order state with the status value
+		order.setStatus(status);
+		// REVIEW - Update the order
+		 orderService.update(order) ;
 		
 
 		// REVIEW - Redirect to admin's orders page

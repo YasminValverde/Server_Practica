@@ -24,7 +24,7 @@ public class Item implements Serializable {
 	private static final int MAX_DESCRIPTION = 250;
 
 	/* Lombok */
-	@NonNull
+	@NotNull
 	@EqualsAndHashCode.Include
 	private Long reference;
 

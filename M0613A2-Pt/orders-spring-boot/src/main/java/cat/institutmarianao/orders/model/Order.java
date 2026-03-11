@@ -8,6 +8,8 @@ import java.util.Map;
 import java.util.Objects;
 
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
@@ -28,27 +30,28 @@ public class Order implements Serializable {
 	}
 
 	/* Lombok */
-	@NonNull
+	@NotNull
 	@EqualsAndHashCode.Include
 	private Long reference;
-
+	
+	// REVIEW - Add validation annotations:
 	@NotNull
 	// - client: not null
 	private User client;
 
-	// TODO - Add validation annotations:
+	// REVIEW - Add validation annotations:
 	@Valid // Invoke validation on nested object
+	@NonNull
 	private PostalAddress deliveryAddress;
 
 	private Date startDate;
 
 	private Date deliveryDate;
-
+	// REVIEW - Add validation annotations:
 	@NotNull
 	@NotEmpty
 	// - items: not null nor empty
 	private Map<Item, Integer> items;
-
 	private Status status = Status.PENDING;
 
 	public Map<Item, Integer> getItems() {
