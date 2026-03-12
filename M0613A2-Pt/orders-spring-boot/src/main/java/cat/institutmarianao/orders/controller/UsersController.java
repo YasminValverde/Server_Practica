@@ -89,7 +89,7 @@ public class UsersController {
 		order.getItems().clear();
 
 		// REVIEW - Redirect to newOrder page
-		return "redirect:/users/newOrder";
+		return "redirect:/users/orders/newOrder";
 	}
 
 	// REVIEW - Add necessary annotation to handle corresponding GET request
@@ -103,13 +103,13 @@ public class UsersController {
 		// REVIEW - Increase item quantity
 		  Integer quantity = order.getItems().get(item);
 		  if (quantity != null) {
-			    order.getItems().put(item, quantity + 1);
+		    	order.getItems().put(item, quantity + 1);
 			} else {
 			    order.getItems().put(item, 1);
 			}
 		// Convenience methods to update quantities from controller/service 
 		// REVIEW - Redirect to newOrder page
-		return "redirect:/users/newOrder";
+		return "redirect:/users/orders/newOrder";
 	}
 
 	// REVIEW - Add necessary annotation to handle corresponding GET request
@@ -133,7 +133,7 @@ public class UsersController {
 
 
 		// REVIEW - Redirect to newOrder page
-		return "redirect:/users/newOrder";
+		return "redirect:/users/orders/newOrder";
 	}
 
 	// REVIEW - Add necessary annotation to handle corresponding GET request

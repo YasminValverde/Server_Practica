@@ -55,7 +55,7 @@
 						<li class="nav-item"
 							th:if="${order != null and order.items != null and !#maps.isEmpty(order.items)}">
 							<a class="nav-link"
-							th:href="@{/users/orders/newOrder/finishOrder}"
+							th:href="@{/users/orders/finishOrder}"
 							th:classappend="${activePage == 'finishOrder'} ? 'active'"> <i
 								class="bi bi-bag-check-fill"></i> <span
 								th:text="#{template.navbar.finish.order}">Finish order</span>

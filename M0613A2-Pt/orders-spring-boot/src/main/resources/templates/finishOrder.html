@@ -10,7 +10,7 @@
 		<nav th:replace="~{fragments/template :: navbar(finishOrder)}"></nav>
 
 		<!--/* TODO finish order form with address fields, according to requirements */-->
-		<form action="/users/orders/newOrder/finishOrder" method="post"
+		<form th:action="@{/users/orders/finishOrder}" action="/users/orders/finishOrder" method="post"
 			class="form-horizontal">
 			<div class="container">
 				<div class="row card">
