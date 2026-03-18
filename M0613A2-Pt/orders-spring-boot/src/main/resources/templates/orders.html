@@ -1,91 +1,110 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="https://www.thymeleaf.org"
-	xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 
 <head th:replace="~{fragments/template :: head}"></head>
 
 <body class="m-4">
-	<div class="container">
-		<header th:replace="~{fragments/template :: header}"></header>
-		<nav th:replace="~{fragments/template :: navbar(orders)}"></nav>
+<div class="container">
+    <header th:replace="~{fragments/template :: header}"></header>
+    <nav th:replace="~{fragments/template :: navbar(orders)}"></nav>
 
-		<!--/* TODO Do the following things according to requirements */-->
-		<table class="table table-striped table-bordered table-condensed table-responsive">
-			<thead>
-				<tr>
-					<th th:text="#{orders.client}" sec:authorize="hasRole('ADMIN')">Client</th>
-					<th th:text="#{orders.reference}">Reference</th>
-					<th th:text="#{orders.deliveryAddress}">Delivery address</th>
-					<th th:text="#{orders.startDate}">Start date</th>
-					<th th:text="#{orders.state}">State</th>
-					<th th:text="#{orders.deliveryDate}">Delivery date</th>
-					<th th:text="#{orders.details}">Details</th>
-				</tr>
-			</thead>
-			<tbody>
-				<!--/* TODO if user has role USER -> Show all orders of the user */-->
-				<!--si no hay nada user-->
-				<tr th:if="${orders == null or orders.empty}" sec:authorize="hasRole('USER')">
-					 <td colspan="6" th:text="#{orders.user.no.orders}">You haven't placed any orders yet.</td> 
-				</tr>
-				<tr th:if="${orders != null or !orders.empty}" th:each="order : ${orders}" sec:authorize="hasRole('USER')">
-					<td th:text="${orders.reference}">00000001</td>
-					<td>
-						<span th:text="${orders.client.firstName + ' ' + orders.client.lastName}">Lisa Brennan-Jobs Nombre del destinatario/Recipient</span><br> 
-						<span th:text="${orders.deliveryAddress.address}">calle Address</span><br>
-						<span th:text="${orders.deliveryAddress.zipCode + ' ' + orders.deliveryAddress.city}">00000 Zip code jerez City</span><br> 
-						<span th:text="${orders.deliveryAddress.state}">cadiz State/Province</span><br> 
-						<span th:text="${orders.deliveryAddress.country}">ESPAÑA Country</span>
-					</td>
-					<td>de febr. 19, 2026</td>
-					<td><span>Returned</span></td>
-					<td><span>de febr. 28, 2026</span></td>
-					<td>
-					</td>
-				</tr>
-				<!--/* TODO if user has role ADMIN -> Show all orders of all users and let change state and delivery date */-->
-				<tr th:if="${orders == null or orders.empty}" sec:authorize="hasRole('ADMIN')">
-					 <td colspan="6" th:text="#{orders.admin.no.orders}">There are no orders in the system.</td> 
-				</tr>
-				<tr th:if="${orders != null or !orders.empty}" sec:authorize="hasRole('ADMIN')">
-					<td>Lisa Brennan-Jobs</td>
-					<td>00000001</td>
-					<td><span>Lisa Brennan-Jobs</span><br> <span>calle</span><br>
-						<span>00000 jerez</span><br> <span>cadiz</span><br> <span>ESPAÑA</span>
-					</td>
-					<td>de febr. 19, 2026</td>
-					<td>
-						<form action="/admin/orders/setStatus" method="POST">
-							<div class="form-group">
-								<select name="status" class="form-select"
-									onchange="this.form.submit();">
-									<option value="PENDING">Pending shipping</option>
-									<option value="TRANSIT">In transit</option>
-									<option value="DELIVERY">Delivery</option>
-									<option value="ABSENT">Recipient absent</option>
-									<option value="PENDING_COLLECTION">Pending collection</option>
-									<option value="RETURNED" selected="selected">Returned</option>
-								</select>
-							</div>
-							<input type="hidden" name="reference" value="1">
-						</form>
-					</td>
-					<td>
-						<form action="/admin/orders/setDeliveryDate" method="POST">
-							<div class="form-group">
-								<input type="date" name="deliveryDate"
-									class="form-control input-sm" value="2026-02-28"
-									min="2026-02-19" onchange="this.form.submit();"> <input
-									type="hidden" name="reference" value="1">
-							</div>
-						</form>
-					</td>
-					<td>
-						
-					</td>
-				</tr>
-			</tbody>
-		</table>
-	</div>
+    <table class="table table-striped table-bordered table-condensed table-responsive">
+        <thead>
+        <tr>
+
+            <th th:text="#{orders.client}" sec:authorize="hasRole('ADMIN')">Client</th>
+            <th th:text="#{orders.reference}">Reference</th>
+            <th th:text="#{orders.deliveryAddress}">Delivery address</th>
+            <th th:text="#{orders.startDate}">Start date</th>
+            <th th:text="#{orders.state}">State</th>
+            <th th:text="#{orders.deliveryDate}">Delivery date</th>
+            <th th:text="#{orders.details}">Details</th>
+        </tr>
+        </thead>
+
+        <tbody>
+
+        <tr th:if="${orders == null or orders.empty}" sec:authorize="hasRole('USER')">
+            <td colspan="7" th:text="#{orders.user.no.orders}">You haven't placed any orders yet.</td>
+        </tr>
+
+
+        <tr th:each="order : ${orders}"
+            th:if="${orders != null and !orders.empty}"
+            sec:authorize="hasRole('USER')">
+            <td th:text="${order.reference}">00000001</td>
+
+            <td>
+
+                <span th:text="${order.deliveryAddress.recipientName}">Recipient</span><br>
+                <span th:text="${order.deliveryAddress.address}">Address</span><br>
+                <span th:text="${order.deliveryAddress.zipCode + ' ' + order.deliveryAddress.city}">Zip City</span><br>
+                <span th:text="${order.deliveryAddress.state}">State</span><br>
+                <span th:text="${order.deliveryAddress.country}">Country</span>
+            </td>
+
+            <td th:text="${order.startDate}">2026-02-19</td>
+            <td th:text="${order.status}">PENDING</td>
+            <td th:text="${order.deliveryDate}">2026-02-28</td>
+            <td></td>
+        </tr>
+
+
+        <tr th:if="${orders == null or orders.empty}" sec:authorize="hasRole('ADMIN')">
+            <td colspan="7" th:text="#{orders.admin.no.orders}">There are no orders in the system.</td>
+        </tr>
+
+
+        <tr th:each="order : ${orders}" sec:authorize="hasRole('ADMIN')">
+
+            <td th:text="${order.client != null ? (order.client.firstName + ' ' + order.client.lastName) : '—'}">Client</td>
+
+
+            <td th:text="${order.reference}">00000001</td>
+
+            <td>
+                <span th:text="${order.deliveryAddress.recipientName}">Recipient</span><br>
+                <span th:text="${order.deliveryAddress.address}">Address</span><br>
+                <span th:text="${order.deliveryAddress.zipCode + ' ' + order.deliveryAddress.city}">Zip City</span><br>
+                <span th:text="${order.deliveryAddress.state}">State</span><br>
+                <span th:text="${order.deliveryAddress.country}">Country</span>
+            </td>
+
+
+            <td th:text="${order.startDate}">2026-02-19</td>
+
+
+            <td>
+                <form th:action="@{/admin/orders/setStatus}" method="post">
+                    <select name="status" class="form-select" onchange="this.form.submit();">
+                        <option th:each="st : ${orderStatus}"
+                                th:value="${st}"
+                                th:text="${st}"
+                                th:selected="${st == order.status}">
+                        </option>
+                    </select>
+                    <input type="hidden" name="reference" th:value="${order.reference}">
+                </form>
+            </td>
+
+
+            <td>
+                <form th:action="@{/admin/orders/setDelivery}" method="post">
+                    <input type="date"
+                           name="deliveryDate"
+                           class="form-control"
+                           th:value="${order.deliveryDate != null ? #dates.format(order.deliveryDate, 'yyyy-MM-dd') : null}"
+                           th:attr="min=${order.startDate != null ? #dates.format(order.startDate, 'yyyy-MM-dd') : null}"
+                           onchange="this.form.submit();">
+                    <input type="hidden" name="reference" th:value="${order.reference}">
+                </form>
+            </td>
+
+            <td></td>
+        </tr>
+        </tbody>
+    </table>
+</div>
 </body>
 </html>

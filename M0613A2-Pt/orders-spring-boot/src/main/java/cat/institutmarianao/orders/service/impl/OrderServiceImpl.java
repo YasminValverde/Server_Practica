@@ -18,7 +18,7 @@ public class OrderServiceImpl implements OrderService {
 	@Override
 	public Order get(Long reference) {
 
-		return null;
+		return orderRepository.get(reference);
 	}
 
 	@Override

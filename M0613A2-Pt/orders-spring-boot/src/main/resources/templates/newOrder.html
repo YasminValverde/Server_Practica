@@ -26,8 +26,8 @@
 					
 					<div class="card-body">
 					<!-- Iterate over the order items stored in session: order.items is a Map<Item,Integer> -->
-					<div th:if="${#session.getAttribute('order') != null}">
-						<div th:each="entry : ${#session.getAttribute('order').items.entrySet()}" class="d-flex flex-row align-items-center mb-2">
+					<div th:if="${session.order != null}">
+						<div th:each="entry : ${session.order.items.entrySet()}" class="d-flex flex-row align-items-center mb-2">
 							<!-- entry.key = Item, entry.value = quantity -->
 							<div class="flex-shrink-1 me-2">
 								<img th:alt="${entry.key.name}"
